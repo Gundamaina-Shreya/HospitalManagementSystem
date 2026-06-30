@@ -106,7 +106,7 @@ public class BillServiceImpl implements BillService
 				
 				.pid(billDto.getPid())
 				.patientName(billDto.getPatientName())
-				.doctorName(billDto.getDoctorName())
+				.did(billDto.getDid())
 				.disease(billDto.getDisease())
 				.consultationFee(billDto.getConsultationFee())
 				.medicineCosts(billDto.getMedicineCosts())

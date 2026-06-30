@@ -8,9 +8,8 @@ import com.hm.hospital.entity.PatientEntity;
 
 public interface PatientService 
 {
-
+	
 	PatientEntity patientDetails(PatientDto patientDto);
-
 	
 	List<PatientEntity>getAllPatients();
 	
@@ -19,7 +18,5 @@ public interface PatientService
 	PatientEntity updatePatient(Long id,PatientDto patientDto);
 	
 	void  deletePatient(Long id);
-
-	
 	
 }

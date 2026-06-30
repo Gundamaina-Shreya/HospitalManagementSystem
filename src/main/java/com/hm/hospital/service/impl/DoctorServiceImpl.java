@@ -1,14 +1,18 @@
 package com.hm.hospital.service.impl;
 
 import com.hm.hospital.repository.DoctorRepository;
+import com.hm.hospital.repository.UserRepository;
+
 import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.hm.hospital.dto.DoctorDto;
 import com.hm.hospital.entity.DoctorEntity;
+import com.hm.hospital.entity.UserEntity;
 import com.hm.hospital.service.DoctorService;
 
 @Service
@@ -18,7 +22,12 @@ public class DoctorServiceImpl implements DoctorService
 	@Autowired
 	private  DoctorRepository doctorRepository;
 	
-
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+	
 
 	@Override
 	public DoctorEntity enterdoctorDetails(DoctorDto doctorDto)
@@ -36,7 +45,23 @@ public class DoctorServiceImpl implements DoctorService
 				.joiningDate(LocalDate.now())
 				.build();
 				
-		return doctorRepository.save(doctorEntity);
+		DoctorEntity saved=doctorRepository.save(doctorEntity);
+		
+		String username=doctorDto.getEmail();
+		String password=String.valueOf(doctorDto.getPhone());
+		
+		if(!userRepository.findByUsername(username).isPresent())
+		{
+			UserEntity user=UserEntity.builder()
+					.username(username)
+					.password(passwordEncoder.encode(password))
+					.role("DOCTOR")
+					.referenceID(saved.getDid())
+					.build();
+			userRepository.save(user);
+
+		}
+		return saved;
 	}
 
 

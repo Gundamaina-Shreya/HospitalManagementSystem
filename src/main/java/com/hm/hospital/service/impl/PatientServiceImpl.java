@@ -5,11 +5,14 @@ import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.hm.hospital.dto.PatientDto;
 import com.hm.hospital.entity.PatientEntity;
+import com.hm.hospital.entity.UserEntity;
 import com.hm.hospital.repository.PatientRepository;
+import com.hm.hospital.repository.UserRepository;
 import com.hm.hospital.service.PatientService;
 
 @Service
@@ -19,7 +22,11 @@ public class PatientServiceImpl implements PatientService
 	@Autowired
 	private PatientRepository patientRepository;
 	
-
+	@Autowired
+	private UserRepository userRepository;
+	
+	@Autowired
+	private PasswordEncoder passwordEncoder;
 	
 	@Override
 	public PatientEntity patientDetails(PatientDto patientDto) 
@@ -36,8 +43,20 @@ public class PatientServiceImpl implements PatientService
 				.status(patientDto.getStatus())
 				.admissionDate(LocalDate.now())
 				.build();
-		return patientRepository.save(patitnetEntity);
 		
+		PatientEntity saved=patientRepository.save(patitnetEntity);
+		String username=String.valueOf(patientDto.getPno());
+		if(!userRepository.findByUsername(username).isPresent())
+		{
+			UserEntity user=UserEntity.builder()
+					.username(username)
+					.password(passwordEncoder.encode(username))
+					.role("PATIENT")
+					.referenceID(saved.getPid())
+					.build();
+			userRepository.save(user);
+		}
+		return saved;
 	}
 
 	@Override
@@ -80,6 +99,9 @@ public class PatientServiceImpl implements PatientService
 
 	    patientRepository.deleteById(id);
 	}
+
+
+	
 
 
 

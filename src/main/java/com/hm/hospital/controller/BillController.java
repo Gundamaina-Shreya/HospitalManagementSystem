@@ -43,7 +43,7 @@ public class BillController
 		return ResponseEntity.ok(bill);
 	}
 	
-	@GetMapping("/patient/{pid}")
+	@GetMapping("/patients/{pid}")
 	public ResponseEntity<List<BillEntity>> getBillByPatientId(@PathVariable("pid") long pid)
 	{
 		List<BillEntity> bills=billService.getBillByPatientId(pid);

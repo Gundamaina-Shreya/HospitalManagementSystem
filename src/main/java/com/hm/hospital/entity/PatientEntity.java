@@ -40,6 +40,8 @@ public class PatientEntity
 	
 	private String email;
 	
+	private String password;
+	
 	private String address;
 	
 	private String disease;

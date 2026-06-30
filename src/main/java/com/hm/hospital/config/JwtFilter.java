@@ -12,6 +12,7 @@ import org.springframework.web.filter.OncePerRequestFilter;
 
 import com.hm.hospital.util.JwtUtil;
 
+import io.jsonwebtoken.ExpiredJwtException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,7 +40,14 @@ public class JwtFilter extends OncePerRequestFilter
 		if(authHeader!=null && authHeader.startsWith("Bearer "))
 		{
 			token=authHeader.substring(7);
-			username=jwtUtil.extractUsername(token);
+			try {
+				username=jwtUtil.extractUsername(token);
+			}
+			catch(Exception e){
+				logger.error("JWT error: "+e.getMessage());;
+				filterChain.doFilter(request, response);
+				return;
+			}
 		}
 		
 		//Validating Token

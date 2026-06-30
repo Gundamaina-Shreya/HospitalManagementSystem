@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.hm.hospital.dto.AuthResponseDTO;
 import com.hm.hospital.dto.AuthenticationRequestDTO;
 import com.hm.hospital.entity.UserEntity;
 
@@ -45,21 +46,29 @@ public class AuthenticationController
 		UserEntity userentity=UserEntity.builder()
 				.username(authrequest.getUsername())
 				.password(passwordEncoder.encode(authrequest.getPassword()))
-				.role("USER")
+				.role(authrequest.getRole()!=null?
+						authrequest.getRole():"PATIENT")
+				.referenceID(authrequest.getReferenceID())
 				.build();
 		userRepository.save(userentity);
 		return ResponseEntity.ok("User registered Successfully");
 	}
 	
 	@PostMapping("/login")
-	public ResponseEntity<String> login(@RequestBody AuthenticationRequestDTO authrequest)
+	public ResponseEntity<AuthResponseDTO> login(@RequestBody AuthenticationRequestDTO authrequest)
 	{
 		authenticateManager .authenticate(
 				new UsernamePasswordAuthenticationToken(
 						authrequest.getUsername(),
 						authrequest.getPassword()));
 		
+		UserEntity user=userRepository
+				.findByUsername(authrequest.getUsername())
+				.orElseThrow();
+		
 		String token=jwtUtil.generateToken(authrequest.getUsername());
-		return ResponseEntity.ok(token);
+		
+		return ResponseEntity.ok(
+				new AuthResponseDTO(token, user.getRole(), user.getReferenceID(), user.getUsername()));
 	}
 }

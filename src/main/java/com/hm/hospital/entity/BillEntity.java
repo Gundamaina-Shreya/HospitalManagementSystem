@@ -28,7 +28,7 @@ public class BillEntity
 	
 	private String patientName;
 	
-	private String doctorName;
+	private Long did;
 	
 	private String disease;
 	

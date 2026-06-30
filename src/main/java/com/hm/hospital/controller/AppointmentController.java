@@ -5,7 +5,6 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -49,16 +48,18 @@ public class AppointmentController
 				.ok(appointmentService.getDetailsByAppointmentId(aid));
 	}
 	
-	@GetMapping("/patient/{pid}")
+	@GetMapping("/patients/{pid}")
 	public ResponseEntity<List<AppointmentEntity>> getAppointmentsByPatient(@PathVariable("pid") Long pid)
 	{
-		return ResponseEntity.ok(appointmentService.getAppointmentsByPatient(pid));
+		List<AppointmentEntity> appointments=appointmentService.getAppointmentsByPatient(pid);
+		return ResponseEntity.ok(appointments);
 	}
 	
 	@GetMapping("/doctor/{did}")
 	public ResponseEntity<List<AppointmentEntity>> getAppointmentsByDoctor(@PathVariable("did") Long did)
 	{
-		return ResponseEntity.ok(appointmentService.getAppointmentsByDoctor(did));
+		List<AppointmentEntity> appointments=appointmentService.getAppointmentsByDoctor(did);
+		return ResponseEntity.ok(appointments);
 	}
 	
 	@PutMapping("/{aid}")

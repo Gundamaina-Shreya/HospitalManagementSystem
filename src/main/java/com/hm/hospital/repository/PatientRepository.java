@@ -8,5 +8,7 @@ import com.hm.hospital.entity.PatientEntity;
 @Repository
 public interface PatientRepository extends JpaRepository<PatientEntity, Long>
 {
+
+	
 	
 }

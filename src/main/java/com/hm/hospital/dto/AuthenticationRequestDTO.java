@@ -7,4 +7,6 @@ public class AuthenticationRequestDTO
 {
 	private String username;
 	private String password;
+	private String role;
+	private Long referenceID;
 }

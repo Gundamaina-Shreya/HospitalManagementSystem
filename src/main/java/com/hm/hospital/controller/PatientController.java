@@ -1,5 +1,6 @@
 package com.hm.hospital.controller;
 
+import com.hm.hospital.repository.PatientRepository;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,14 @@ public class PatientController
 {
 	@Autowired
 	private PatientService patientService;
+	
+	@Autowired
+	private PatientRepository patientRepository;
 
+	
+	PatientController(PatientRepository patientRepository) {
+		this.patientRepository = patientRepository;
+	}
 	@PostMapping
 	public ResponseEntity<PatientEntity> patientDetails(@RequestBody PatientDto patientDto)
 	{
@@ -47,7 +55,6 @@ public class PatientController
 		PatientEntity patientEntity=patientService.getPatientById(id);
 		return ResponseEntity.ok(patientEntity);
 	}
-	
 	@PutMapping("/{id}")
 	public ResponseEntity<PatientEntity> updatePatient(@PathVariable ("id")Long id,@RequestBody PatientDto patientDto)
 	{
@@ -62,6 +69,7 @@ public class PatientController
         return ResponseEntity.ok("Patient with ID " + id + " deleted successfully");
 		
 	}
+	
 	
    
 
